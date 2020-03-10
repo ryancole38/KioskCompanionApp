@@ -42,8 +42,8 @@ namespace KioskCompanion.Views
 
         void BuildDynamicContent(string viewString)
         {
-            /*
-             string viewString = @"{
+            
+             viewString = @"{
 	                            'Type': 'StackLayout',
 	                            'Orientation': 'Vertical',
 	                            'Children':[
@@ -61,6 +61,7 @@ namespace KioskCompanion.Views
 				                            {
 					                            'Type': 'Label',
 					                            'Text': 'Another label!',
+                                                'TextColor': 'Blue',
 					                            'HorizontalOptions': 'CenterAndExpand'
 				                            }
 			                            ]
@@ -73,10 +74,9 @@ namespace KioskCompanion.Views
 		                            }
 	                            ]
                             }";
-            */
-            ViewElement deserializedView = JsonConvert.DeserializeObject<ViewElement>(viewString);
+            
+            SerializableStackLayout deserializedView = JsonConvert.DeserializeObject<SerializableStackLayout>(viewString, new SerializableViewElementConverter());
             StackLayout content = (StackLayout)ViewBuilder.BuildView(deserializedView);
-
             Button scanButton = new Button(){ HorizontalOptions = LayoutOptions.CenterAndExpand, Text = "Start Scanning" };
             scanButton.Clicked += Scan_Clicked;
 
@@ -99,7 +99,6 @@ namespace KioskCompanion.Views
         void CancelScanning(object sender, EventArgs e)
         {
             Scanner.Cancel();
-            //viewModel.Text = viewModel.Transmission.BuildCompletedMessage();
             BuildDynamicContent(viewModel.Transmission.BuildCompletedMessage());
         }
     }

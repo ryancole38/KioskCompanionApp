@@ -6,27 +6,24 @@ namespace KioskCompanion.Services
 {
     public class ViewBuilder
     {
-        public ViewBuilder()
-        {
-        }
 
-        public static View BuildView(ViewElement root)
+        public static View BuildView(SerializableViewElement root)
         {
             View ToReturn = null;
 
             switch (root.Type)
             {
                 case "StackLayout":
-                    ToReturn = BuildStackLayout(root);
+                    ToReturn = BuildStackLayout((SerializableStackLayout)root);
                     break;
                 case "Label":
-                    ToReturn = BuildLabel(root);
+                    ToReturn = BuildLabel((SerializableLabel)root);
                     break;
             }
             return ToReturn;
         }
 
-        private static StackLayout BuildStackLayout(ViewElement root)
+        private static StackLayout BuildStackLayout(SerializableStackLayout root)
         {
             StackLayout ToReturn = new StackLayout();
             ToReturn.Orientation = GetStackOrientation(root.Orientation);
@@ -36,7 +33,7 @@ namespace KioskCompanion.Services
             return ToReturn;
         }
 
-        private static Label BuildLabel(ViewElement element)
+        private static Label BuildLabel(SerializableLabel element)
         {
             Label label = new Label();
             label.Text = element.Text;
@@ -44,6 +41,8 @@ namespace KioskCompanion.Services
             label.VerticalOptions = GetLayoutOptions(element.VerticalOptions);
             if(element.TextColor != null && element.TextColor != "")
                 label.TextColor = GetColor(element.TextColor);
+            label.FontSize = element.FontSize;
+            label.FontAttributes = GetFontAttributes(element.FontAttributes);
             return label;
         }
 
@@ -61,30 +60,16 @@ namespace KioskCompanion.Services
 
         private static LayoutOptions GetLayoutOptions(string option)
         {
-            switch (option) {
-                case "Center":
-                    return LayoutOptions.Center;
-                case "CenterAndExpand":
-                    return LayoutOptions.CenterAndExpand;
-                case "End":
-                    return LayoutOptions.End;
-                case "EndAndExpand":
-                    return LayoutOptions.EndAndExpand;
-                case "Fill":
-                    return LayoutOptions.Fill;
-                case "FillAndExpand":
-                    return LayoutOptions.FillAndExpand;
-                case "Start":
-                    return LayoutOptions.Start;
-                case "StartAndExpand":
-                    return LayoutOptions.StartAndExpand;
-            }
+            LayoutOptionsConverter converter = new LayoutOptionsConverter();
+            if (option != null && option != "")
+                return (LayoutOptions)converter.ConvertFromInvariantString(option);
+
             return LayoutOptions.Fill;
         }
 
-        private static void BuildChildren(StackLayout view, ViewElement root)
+        private static void BuildChildren(StackLayout view, SerializableStackLayout root)
         {
-            foreach(ViewElement child in root.Children)
+            foreach(SerializableViewElement child in root.Children)
             {
                 view.Children.Add(BuildView(child));
             }
@@ -94,6 +79,13 @@ namespace KioskCompanion.Services
         {
             ColorTypeConverter converter = new ColorTypeConverter();
             return (Color)converter.ConvertFromInvariantString(colorName);
+        }
+
+        private static FontAttributes GetFontAttributes(string attribute)
+        {
+            if (attribute != null && attribute != "")
+                return (FontAttributes)((new FontAttributesConverter()).ConvertFromInvariantString(attribute));
+            return FontAttributes.None;
         }
     }
 }

@@ -35,9 +35,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\QRScanViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Message.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MessageOptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\ViewElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\SerializableViewElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ViewBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SerializableStackLayout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\SerializableLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SerializableViewElementConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\MainPage.xaml">
